@@ -1,0 +1,78 @@
+# action.yaml
+name: 'EC2 Spot Runner'
+description: 'A GitHub Action that spin a new EC2 and register as a self-runner to execute workflows.'
+inputs:
+  ec2_ami:
+    description: 'Defines the AMI to use.'
+    type: string
+  ec2_instance_type:
+    description: 'Defines the EC2 Instance Type'
+    type: string
+  ec2_subnet_id:
+    description: 'Defines the Subnet ID'
+  ec2_security_group:
+    description: 'Defines the Security group to attach on the EC2'
+  ec2_iam_instance_role:
+    description: 'The role to be used on the EC2'
+  mode:
+    description: 'The execution mode. start,stop'
+    default: "start"
+    type: string
+  ec2_instance_id:
+    description: 'For stop execution mode, the EC2 to be stopped.'
+    type: string
+  github_token:
+    description: 'The GH token to register the EC2 as a runner'
+    required: true
+    type: string
+  ec2_instance_ttl:
+    description: 'EC2 maximum execution time'
+    default: 60
+
+outputs:
+  ec2_instance_id:
+    description: 'The EC2 started'
+    # need to specify the extra `value` field for `composite` actions
+    value: ${{ steps.get-square.outputs.num_squared }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Python
+      uses: actions/setup-python@v5
+      id: setup_python
+      with:
+        python-version: '3.12'  
+    - name: Restore cached virtualenv
+      uses: actions/cache/restore@v4
+      with:
+        key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
+        path: .venv
+    - name: Install Dependencies
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        python -m pip install -r requirements.txt
+        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+    - name: Saved cached virtualenv
+      uses: actions/cache/save@v4
+      with:
+        key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
+        path: .venv
+    - name: Pass Inputs to Shell
+      run: |
+              echo "AMI_ID=${{ inputs.ec2_ami }}" >> $GITHUB_ENV
+              echo "INSTANCE_TYPE=${{ inputs.ec2_instance_type }}" >> $GITHUB_ENV
+              echo "SUBNET_ID=${{ inputs.ec2_subnet_id }}" >> $GITHUB_ENV
+              echo "SECURITY_GROUP=${{ inputs.ec2_security_group }}" >> $GITHUB_ENV
+              echo "IAM_ROLE_NAME=${{ inputs.ec2_iam_instance_role }}" >> $GITHUB_ENV
+              echo "INSTANCE_ID=${{ inputs.ec2_instance_id }}" >> $GITHUB_ENV
+              echo "ACTION=${{ inputs.mode }}" >> $GITHUB_ENV
+              echo "GITHUB_TOKEN=${{ inputs.github_token }}" >> $GITHUB_ENV
+              echo "MAX_EXEC=${{ inputs.ec2_instance_ttl }}" >> $GITHUB_ENV
+
+      shell: bash
+    - name: Fetch the number's square
+      id: get-square
+      run: python scripts/ec2.py
+      shell: bash

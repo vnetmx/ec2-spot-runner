@@ -25,6 +25,14 @@ inputs:
     description: 'The GH token to register the EC2 as a runner'
     required: true
     type: string
+  github_repo:
+    type: string
+  github_org:
+    type: string
+  job_name:
+    type: string
+  job_id:
+    type: string
   ec2_instance_ttl:
     description: 'EC2 maximum execution time'
     default: 60
@@ -61,6 +69,10 @@ runs:
               echo "ACTION=${{ inputs.mode }}" >> $GITHUB_ENV
               echo "GITHUB_TOKEN=${{ inputs.github_token }}" >> $GITHUB_ENV
               echo "MAX_EXEC=${{ inputs.ec2_instance_ttl }}" >> $GITHUB_ENV
+              echo "JOB_NAME=${{ inputs.job_name }}" >> $GITHUB_ENV
+              echo "JOB_ID=${{ inputs.job_id }}" >> $GITHUB_ENV
+              echo "GITHUB_ORG=${{ inputs.github_org }}" >> $GITHUB_ENV
+              echo "GITHUB_REPO=${{ inputs.github_repo }}" >> $GITHUB_ENV
     - name: Create EC2/Runner
       id: get-square
       run: python ${GITHUB_ACTION_PATH}/scripts/ec2.py

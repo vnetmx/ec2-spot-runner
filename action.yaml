@@ -72,8 +72,6 @@ runs:
               echo "ACTION=${{ inputs.mode }}" >> $GITHUB_ENV
               echo "GITHUB_TOKEN=${{ inputs.github_token }}" >> $GITHUB_ENV
               echo "MAX_EXEC=${{ inputs.ec2_instance_ttl }}" >> $GITHUB_ENV
-
-      shell: bash
     - name: Fetch the number's square
       id: get-square
       run: python scripts/ec2.py

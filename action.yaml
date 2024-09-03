@@ -42,11 +42,6 @@ runs:
       id: setup_python
       with:
         python-version: '3.10'  
-    - name: Restore cached virtualenv
-      uses: actions/cache/restore@v4
-      with:
-        key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
-        path: .venv
     - name: Install Dependencies
       shell: bash
       run: |

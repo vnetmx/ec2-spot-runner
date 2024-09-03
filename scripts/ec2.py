@@ -1,6 +1,6 @@
-import boto3
 import os
 import base64
+import boto3
 
 ec2 = boto3.client('ec2')
 

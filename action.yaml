@@ -45,8 +45,6 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: |
-        ls -la
-        pwd
         python -m venv .venv
         source .venv/bin/activate
         python -m pip install boto3==1.34.149
@@ -65,5 +63,7 @@ runs:
               echo "MAX_EXEC=${{ inputs.ec2_instance_ttl }}" >> $GITHUB_ENV
     - name: Create EC2/Runner
       id: get-square
-      run: python scripts/ec2.py
+      run: python ${GITHUB_ACTION_PATH}/scripts/ec2.py
       shell: bash
+
+      

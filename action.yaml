@@ -48,6 +48,7 @@ runs:
         key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
         path: .venv
     - name: Install Dependencies
+      shell: bash
       run: |
         python -m venv .venv
         source .venv/bin/activate
@@ -60,6 +61,7 @@ runs:
         key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
         path: .venv
     - name: Pass Inputs to Shell
+      shell: bash
       run: |
               echo "AMI_ID=${{ inputs.ec2_ami }}" >> $GITHUB_ENV
               echo "INSTANCE_TYPE=${{ inputs.ec2_instance_type }}" >> $GITHUB_ENV

@@ -19,7 +19,7 @@ github_runner_label = os.environ.get('GITHUB_RUNNER_LABELS', 'autoscaling,x64,li
 github_runner_group = os.environ.get('GITHUB_RUNNER_GROUP', 'infra')
 max_execution_time = os.environ.get('MAX_EXEC', '60')
 github_action_runner_version = os.environ.get('GH_VERSION', '2.319.1')
-job_name = os.environ.get('JOB_NAME', None)
+job_name = os.environ.get('JOB_ID', None)
 job_id = os.environ.get('JOB_ID', None)
 
 
@@ -50,10 +50,10 @@ curl -O -L https://github.com/actions/runner/releases/download/v$GH_RUNNER_VERSI
 
 tar xzf ./actions-runner-linux-$RUNNER_ARCH-$GH_RUNNER_VERSION.tar.gz
 export RUNNER_ALLOW_RUNASROOT=1
-RUNNER_NAME={job_id}-{job_name}-gh
+RUNNER_NAME={job_id}-gh
 
 [ -n \"$(command -v yum)\" ] && yum install libicu -y
-./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_org} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli} --runnergroup {github_runner_group}
+./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli} --runnergroup {github_runner_group}
 # timeout={max_execution_time*60};
 # found=0;
 # (
@@ -67,7 +67,7 @@ RUNNER_NAME={job_id}-{job_name}-gh
 """
 
 user_data = os.environ.get('USER_DATA', default_user_data)
-print(user_data)
+
 def create_instance():
     response = ec2.run_instances(
         ImageId=ami,
@@ -98,10 +98,6 @@ def create_instance():
                     {
                         'Key': 'JobId',
                         'Value': f'{job_id}'
-                    },
-                    {
-                        'Key': 'JobName',
-                        'Value': f'{job_name}'
                     }
                 ]
             },

@@ -69,7 +69,6 @@ runs:
               echo "ACTION=${{ inputs.mode }}" >> $GITHUB_ENV
               echo "GITHUB_TOKEN=${{ inputs.github_token }}" >> $GITHUB_ENV
               echo "MAX_EXEC=${{ inputs.ec2_instance_ttl }}" >> $GITHUB_ENV
-              echo "JOB_NAME=${{ inputs.job_name }}" >> $GITHUB_ENV
               echo "JOB_ID=${{ inputs.job_id }}" >> $GITHUB_ENV
               echo "GITHUB_ORG=${{ inputs.github_org }}" >> $GITHUB_ENV
               echo "GITHUB_REPO=${{ inputs.github_repo }}" >> $GITHUB_ENV

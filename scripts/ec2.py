@@ -104,11 +104,11 @@ def create_instance():
         ],
     )
     _instance_id = response['Instances'][0]['InstanceId']
-    print(f"Creating instance {_instance_id}...")
+    #print(f"Creating instance {_instance_id}...")
 
     waiter = ec2.get_waiter('instance_running')
     waiter.wait(InstanceIds=[_instance_id])
-    print(f"Instance {_instance_id} is now running")
+    #print(f"Instance {_instance_id} is now running")
     return _instance_id
 
 def start_instance(instance_id: str) -> None:
@@ -124,7 +124,7 @@ def stop_instance(instance_id: str) -> None:
     print(f"Stopped instance {instance_id}")
 
 if action == 'create':
-    create_instance()
+    print(create_instance())
 elif action == 'start' and instance_id:
     start_instance(instance_id)
 elif action == 'stop' and instance_id:

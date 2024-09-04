@@ -33,6 +33,9 @@ inputs:
     type: string
   job_id:
     type: string
+  python_version:
+    type: string
+    default: "3.12"
   ec2_instance_ttl:
     description: 'EC2 maximum execution time'
     default: 60
@@ -41,15 +44,42 @@ outputs:
   ec2_instance_id:
     description: 'The EC2 started'
     # need to specify the extra `value` field for `composite` actions
-    value: ${{ steps.get-square.outputs.num_squared }}
+    value: ${{ steps.create-ec2-runner }}
 runs:
   using: 'composite'
   steps:
-    - name: Install Python
-      uses: kishaningithub/setup-python-amazon-linux@v1.0.13
-      id: setup_python
-      with:
-        python-version: '3.10'  
+    - name: Set installation directory
+      id: set-installation-directory
+      shell: bash
+      run: |
+        desired_python_version="${{ inputs.python_version }}"
+        echo "installation_directory=${HOME}/.setup-python-amazon-linux/.python-versions/${desired_python_version}" | tee -a "${GITHUB_OUTPUT}"
+
+    - id: setup-python
+      shell: bash
+      run: |
+        installation_directory="${{ steps.set-installation-directory.outputs.installation_directory }}"
+        desired_python_version="${{ steps.find-desired-python-version.outputs.desired_python_version }}"
+
+        uv venv --python "${desired_python_version}" "${installation_directory}"
+
+    - name: Add python to PATH
+      shell: bash
+      run: |
+        installation_directory="${{ steps.set-installation-directory.outputs.installation_directory }}"
+        echo "${installation_directory}/bin" >> "${GITHUB_PATH}"
+
+        echo "The following python binaries are now available in the PATH"
+        ls "${installation_directory}/bin"
+
+    - name: Install pip
+      shell: bash
+      run: |
+        installation_directory="${{ steps.set-installation-directory.outputs.installation_directory }}"
+
+        python -m ensurepip --upgrade
+        ln -sf "${installation_directory}/bin/pip3" "${installation_directory}/bin/pip"
+        pip install --upgrade pip
     - name: Install Dependencies
       shell: bash
       run: |
@@ -58,6 +88,19 @@ runs:
         python -m pip install boto3==1.34.149
         echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
         echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+    - name: Get runner token
+      id: get-token
+      shell: bash
+      env:
+        TOKEN: ${{ github.token }}
+      run: |
+        RUNNER=$(curl -s -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $TOKEN" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/clara-team/clara-digital-account-service-poc/actions/runners/registration-token | jq -r .token)
+        echo "token_runner=$RUNNER" >> "$GITHUB_OUTPUT"
     - name: Pass Inputs to Shell
       shell: bash
       run: |
@@ -67,14 +110,14 @@ runs:
               echo "SECURITY_GROUP=${{ inputs.ec2_security_group }}" >> $GITHUB_ENV
               echo "IAM_ROLE_NAME=${{ inputs.ec2_iam_instance_role }}" >> $GITHUB_ENV
               echo "ACTION=${{ inputs.mode }}" >> $GITHUB_ENV
-              echo "GITHUB_TOKEN=${{ inputs.github_token }}" >> $GITHUB_ENV
+              echo "GITHUB_TOKEN=${{ steps.get-token.outputs.token_runner }}" >> $GITHUB_ENV
               echo "MAX_EXEC=${{ inputs.ec2_instance_ttl }}" >> $GITHUB_ENV
               echo "JOB_ID=${{ inputs.job_id }}" >> $GITHUB_ENV
               echo "GITHUB_ORG=${{ inputs.github_org }}" >> $GITHUB_ENV
               echo "GITHUB_REPO=${{ inputs.github_repo }}" >> $GITHUB_ENV
     - name: Create EC2/Runner
-      id: get-square
-      run: python ${GITHUB_ACTION_PATH}/scripts/ec2.py
+      id: create-ec2-runner
+      run: echo "instance_id=$(python ${GITHUB_ACTION_PATH}/scripts/ec2.py)" >> "$GITHUB_OUTPUT" 
       shell: bash
 
       

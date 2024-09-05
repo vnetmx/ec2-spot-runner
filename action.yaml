@@ -51,17 +51,19 @@ runs:
     - name: Set installation directory
       id: set-installation-directory
       shell: bash
+      env:
+        PYTHON_VERSION: ${{ inputs.python_version }}
       run: |
-        desired_python_version="${{ inputs.python_version }}"
-        echo "installation_directory=${HOME}/.setup-python-amazon-linux/.python-versions/${desired_python_version}" | tee -a "${GITHUB_OUTPUT}"
+        echo "installation_directory=${HOME}/.setup-python-amazon-linux/.python-versions/$PYTHON_VERSION" | tee -a "${GITHUB_OUTPUT}"
 
     - id: setup-python
       shell: bash
+      env:
+        PYTHON_VERSION: ${{ inputs.python_version }}
       run: |
         installation_directory="${{ steps.set-installation-directory.outputs.installation_directory }}"
-        desired_python_version="${{ steps.find-desired-python-version.outputs.desired_python_version }}"
 
-        uv venv --python "${desired_python_version}" "${installation_directory}"
+        uv venv --python "$PYTHON_VERSION" "${installation_directory}"
 
     - name: Add python to PATH
       shell: bash

@@ -42,6 +42,8 @@ inputs:
 
 runs:
   using: 'composite'
+    outputs:
+      label: ${{ steps.label.outputs.label }}
   steps:
     - name: Set installation directory
       id: set-installation-directory
@@ -118,5 +120,13 @@ runs:
       id: create-ec2-runner
       run: echo "ec2_instance_id=$(python ${GITHUB_ACTION_PATH}/scripts/ec2.py)" >> "$GITHUB_OUTPUT" 
       shell: bash
+
+    - name: Generate Label
+      id: label
+      shell: bash
+      env:
+        LBL: ${{ inputs.github_repo }}
+      run: |
+        echo "label=$LBL" >> "$GITHUB_OUTPUT" 
 
       

@@ -67,6 +67,7 @@ RUNNER_NAME={job_id}-gh
 """
 
 user_data = os.environ.get('USER_DATA', default_user_data)
+repo_name = github_repo.split('/')[-1]
 
 def create_instance():
     response = ec2.run_instances(
@@ -85,7 +86,7 @@ def create_instance():
                 'Tags': [
                     {
                         'Key': 'Name',
-                        'Value': f'{job_id}-gh'
+                        'Value': f'gh-{repo_name}-workflow'
                     },
                     {
                         'Key': 'Owner',

@@ -40,8 +40,6 @@ inputs:
     description: 'EC2 maximum execution time'
     default: 60
 
-outputs:
-  ec2_instance_id: ${{ steps.create-ec2-runner.outputs.ec2_instance_id }}
 runs:
   using: 'composite'
   steps:

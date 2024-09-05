@@ -93,13 +93,15 @@ runs:
       shell: bash
       env:
         TOKEN: ${{ github.token }}
+        GH_ORG: ${{ inputs.github_org }}
+        GH_REPO: ${{ inputs.github_repo }}
       run: |
         RUNNER=$(curl -s -L \
           -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer $TOKEN" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/clara-team/clara-digital-account-service-poc/actions/runners/registration-token | jq -r .token)
+          https://api.github.com/repos/$GH_ORG/$GH_REPO/actions/runners/registration-token | jq -r .token)
         echo "token_runner=$RUNNER" >> "$GITHUB_OUTPUT"
     - name: Pass Inputs to Shell
       shell: bash

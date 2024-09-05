@@ -119,7 +119,7 @@ runs:
               echo "GITHUB_REPO=${{ inputs.github_repo }}" >> $GITHUB_ENV
     - name: Create EC2/Runner
       id: create-ec2-runner
-      run: echo "instance_id=$(python ${GITHUB_ACTION_PATH}/scripts/ec2.py)" >> "$GITHUB_OUTPUT" 
+      run: echo "ec2_instance_id=$(python ${GITHUB_ACTION_PATH}/scripts/ec2.py)" >> "$GITHUB_OUTPUT" 
       shell: bash
 
       

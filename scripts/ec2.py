@@ -54,15 +54,15 @@ RUNNER_NAME={job_id}-gh
 
 [ -n \"$(command -v yum)\" ] && yum install libicu -y
 ./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli} --runnergroup {github_runner_group}
-timeout={max_execution_time*60};
-found=0;
-(
-    while ((timeout-- > 0)); do
-    [[ -d "_work" ]] && {{ found=1; break; }};
-    sleep 1;
-    done;
-    [[ $found -eq 0 ]] && ../shutdown_now_script.sh
-) &
+# timeout={max_execution_time*60};
+# found=0;
+# (
+#     while ((timeout-- > 0)); do
+#     [[ -d "_work" ]] && {{ found=1; break; }};
+#     sleep 1;
+#     done;
+#     [[ $found -eq 0 ]] && ../shutdown_now_script.sh
+# ) &
 ./run.sh
 """
 

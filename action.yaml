@@ -89,7 +89,7 @@ runs:
       id: get-token
       shell: bash
       env:
-        TOKEN: ${{ github.token }}
+        TOKEN: ${{ github.github_token }}
         GH_ORG: ${{ inputs.github_org }}
         GH_REPO: ${{ inputs.github_repo }}
       run: |

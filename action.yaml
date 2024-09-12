@@ -39,7 +39,10 @@ inputs:
   ec2_instance_ttl:
     description: 'EC2 maximum execution time'
     default: 60
-
+outputs:
+  label:
+    description: 'Label output'
+    value: ${{ steps.generate-label.outputs.label }}
 runs:
   using: 'composite'
   steps:
@@ -108,7 +111,9 @@ runs:
         LBL: ${{ inputs.runner_labels }}
       run: |
         timestamp=$(date +%s)
-        echo "label=$LBL-$timestamp" >> "$GITHUB_OUTPUT" 
+        _LBL=${LBL##*/}
+        echo label=$_LBL-$timestamp
+        echo "label=$_LBL-$timestamp" >> "$GITHUB_OUTPUT" 
     - name: Pass Inputs to Shell
       shell: bash
       run: |

@@ -50,7 +50,7 @@ curl -O -L https://github.com/actions/runner/releases/download/v$GH_RUNNER_VERSI
 
 tar xzf ./actions-runner-linux-$RUNNER_ARCH-$GH_RUNNER_VERSION.tar.gz
 export RUNNER_ALLOW_RUNASROOT=1
-RUNNER_NAME={job_id}-gh
+RUNNER_NAME={github_runner_label}
 
 [ -n \"$(command -v yum)\" ] && yum install libicu -y
 echo ./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
@@ -89,6 +89,10 @@ def create_instance():
                     {
                         'Key': 'Name',
                         'Value': f'gh-{repo_name}-workflow'
+                    },
+                    {
+                        'Key': 'Runner ID',
+                        'Value': f'{github_runner_label}'
                     },
                     {
                         'Key': 'Owner',

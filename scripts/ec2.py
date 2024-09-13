@@ -38,9 +38,10 @@ chmod +x $CURRENT_PATH/shutdown_script.sh
 
 ## Termiantion script
 cat << EOF > $CURRENT_PATH/shutdown_now_script.sh
-/actions-runner/config.sh remove --token {github_token} || true
+cd /actions-runner/
+./config.sh remove --token {github_token} || true
 env
-shutdown -P +10
+shutdown -P +5
 EOF
 chmod +x $CURRENT_PATH/shutdown_now_script.sh
 

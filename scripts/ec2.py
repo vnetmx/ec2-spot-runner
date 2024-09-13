@@ -72,7 +72,9 @@ echo ./config.sh --unattended  --disableupdate --ephemeral --url https://github.
 #     done;
 #     [[ $found -eq 0 ]] && ../shutdown_now_script.sh
 # ) &
-./run.sh
+./svc.sh install
+./svc.sh start
+./svc.sh status
 """
 
 user_data = os.environ.get('USER_DATA', default_user_data)

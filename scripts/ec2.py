@@ -30,9 +30,9 @@ CURRENT_PATH=$(pwd)
 
 ## Max execution time script
 cat << EOF > $CURRENT_PATH/shutdown_script.sh
-/actions-runner/config.sh remove --token {github_token} || true
+#/actions-runner/config.sh remove --token {github_token} || true
 env
-shutdown -P +10
+#shutdown -P +10
 EOF
 chmod +x $CURRENT_PATH/shutdown_script.sh
 
@@ -62,7 +62,7 @@ RUNNER_NAME={github_runner_label}
 echo ./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
 
 ./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
-# timeout={max_execution_time*60};
+# timeout={max_execution_time*5};
 # found=0;
 # (
 #     while ((timeout-- > 0)); do

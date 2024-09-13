@@ -59,7 +59,7 @@ tar xzf ./actions-runner-linux-$RUNNER_ARCH-$GH_RUNNER_VERSION.tar.gz
 export RUNNER_ALLOW_RUNASROOT=1
 RUNNER_NAME={github_runner_label}
 
-[ -n \"$(command -v yum)\" ] && yum install libicu -y
+[ -n \"$(command -v yum)\" ] && yum install libicu docker -y
 echo ./config.sh --unattended  --disableupdate --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
 
 ./config.sh --unattended  --disableupdate --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}

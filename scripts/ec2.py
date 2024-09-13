@@ -44,9 +44,9 @@ shutdown -h now
 EOF
 chmod +x $CURRENT_PATH/shutdown_now_script.sh
 
-export ACTIONS_RUNNER_HOOK_JOB_COMPLETED=$CURRENT_PATH/shutdown_script.sh
-mkdir -p actions-runner && cd actions-runner
-echo "ACTIONS_RUNNER_HOOK_JOB_COMPLETED=$CURRENT_PATH/shutdown_script.sh" > .env
+#export ACTIONS_RUNNER_HOOK_JOB_COMPLETED=$CURRENT_PATH/shutdown_script.sh
+#mkdir -p actions-runner && cd actions-runner
+#echo "ACTIONS_RUNNER_HOOK_JOB_COMPLETED=$CURRENT_PATH/shutdown_script.sh" > .env
 
 GH_RUNNER_VERSION={github_action_runner_version}
 

@@ -60,9 +60,9 @@ export RUNNER_ALLOW_RUNASROOT=1
 RUNNER_NAME={github_runner_label}
 
 [ -n \"$(command -v yum)\" ] && yum install libicu -y
-echo ./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
+echo ./config.sh --unattended  --disableupdate --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
 
-./config.sh --unattended  --disableupdate --ephemeral --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
+./config.sh --unattended  --disableupdate --url https://github.com/{github_repo} --token {github_token} --labels {github_runner_label} --name $RUNNER_NAME {github_runner_extracli}
 # timeout={max_execution_time*5};
 # found=0;
 # (
@@ -72,9 +72,7 @@ echo ./config.sh --unattended  --disableupdate --ephemeral --url https://github.
 #     done;
 #     [[ $found -eq 0 ]] && ../shutdown_now_script.sh
 # ) &
-./svc.sh install
-./svc.sh start
-./svc.sh status
+./run.sh
 """
 
 user_data = os.environ.get('USER_DATA', default_user_data)

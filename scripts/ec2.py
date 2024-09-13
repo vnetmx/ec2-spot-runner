@@ -30,7 +30,7 @@ CURRENT_PATH=$(pwd)
 
 ## Max execution time script
 cat << EOF > $CURRENT_PATH/shutdown_script.sh
-./config.sh remove --token {github_token} || true
+/actions-runner/config.sh remove --token {github_token} || true
 env
 shutdown -P +10
 EOF
@@ -38,7 +38,7 @@ chmod +x $CURRENT_PATH/shutdown_script.sh
 
 ## Termiantion script
 cat << EOF > $CURRENT_PATH/shutdown_now_script.sh
-./config.sh remove --token {github_token} || true
+/actions-runner/config.sh remove --token {github_token} || true
 env
 shutdown -h now
 EOF

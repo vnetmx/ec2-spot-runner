@@ -29,13 +29,19 @@ shutdown -P {max_execution_time}
 CURRENT_PATH=$(pwd)
 
 ## Max execution time script
-echo "./config.sh remove --token {github_token} || true" > $CURRENT_PATH/shutdown_script.sh
-echo "shutdown -P +1" > $CURRENT_PATH/shutdown_script.sh
+cat << EOF > $CURRENT_PATH/shutdown_script.sh
+./config.sh remove --token {github_token} || true
+env
+shutdown -P +10
+EOF
 chmod +x $CURRENT_PATH/shutdown_script.sh
 
 ## Termiantion script
-echo "./config.sh remove --token {github_token} || true" > $CURRENT_PATH/shutdown_now_script.sh
-echo "shutdown -h now" > $CURRENT_PATH/shutdown_now_script.sh
+cat << EOF > $CURRENT_PATH/shutdown_now_script.sh
+./config.sh remove --token {github_token} || true
+env
+shutdown -h now
+EOF
 chmod +x $CURRENT_PATH/shutdown_now_script.sh
 
 export ACTIONS_RUNNER_HOOK_JOB_COMPLETED=$CURRENT_PATH/shutdown_script.sh

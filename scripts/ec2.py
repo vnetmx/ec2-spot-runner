@@ -96,7 +96,7 @@ def create_instance():
                 'Tags': [
                     {
                         'Key': 'Name',
-                        'Value': f'gh-{repo_name}-workflow'
+                        'Value': f'gh-{repo_name}-spot'
                     },
                     {
                         'Key': 'Runner ID',
